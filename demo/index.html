@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAG Chat Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./styles.css?v=3" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="grid-lines"></div>
+
+    <main class="app-card">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Retrieval-Augmented Generation</p>
+          <h1>Ask your documents, anything with my RAG Chatbot.</h1>
+          <p class="hero-text">
+            Upload documents, find the most relevant parts, and get answers with sources and response time.
+          </p>
+        </div>
+
+        <div class="hero-panel">
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-label">Pipeline</span>
+              <span class="stat-value">Upload -> Chunk -> Embed -> Retrieve -> Generate</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Retrieval depth</span>
+              <span class="stat-value">Top 5 chunks</span>
+            </div>
+          </div>
+
+          <div class="hero-process">
+            <p class="process-label">How it works</p>
+            <div class="process-steps">
+              <span>1. Upload file</span>
+              <span>2. Create embeddings</span>
+              <span>3. Retrieve best chunks</span>
+              <span>4. Generate cited answer</span>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-label">Documents</span>
+              <strong class="metric-value" id="metric-documents">0</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Chunks</span>
+              <strong class="metric-value" id="metric-chunks">0</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Index Size</span>
+              <strong class="metric-value" id="metric-index-size">0 B</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Last Response</span>
+              <strong class="metric-value" id="metric-latency">N/A</strong>
+            </div>
+          </div>
+
+          <div class="status-pill" id="status-pill">Upload a file or ask a question</div>
+        </div>
+      </section>
+
+      <section class="chat-panel">
+        <header class="chat-header">
+          <div>
+            <p class="chat-kicker">Live Chat</p>
+            <h2>RAG Chatbot</h2>
+          </div>
+          <p class="chat-caption">
+            Each question is embedded, matched against the vector index, ranked by similarity,
+            and answered using the highest-confidence chunks from your uploaded documents.
+          </p>
+        </header>
+
+        <section class="ingest-panel">
+          <div class="ingest-copy">
+            <p class="chat-kicker">Document Upload</p>
+            <h3>Add a PDF or TXT file</h3>
+            <p class="ingest-text">
+              Step 1: click the file box and choose a PDF or TXT file. Step 2: click Upload to add it to the index.
+            </p>
+          </div>
+
+          <form class="upload-form" id="upload-form">
+            <label class="upload-field" for="document-file">
+              <input id="document-file" name="document" type="file" accept=".pdf,.txt" />
+              <span class="upload-title">Click here to choose a document</span>
+              <span class="upload-subtitle">After selecting a file, click Upload to index it</span>
+            </label>
+            <button id="upload-button" type="submit" class="secondary-button">Upload</button>
+          </form>
+
+          <div class="library-card">
+            <div class="library-header">
+              <p class="source-label">Indexed Documents</p>
+              <span id="library-count" class="library-count">Loading...</span>
+            </div>
+            <div id="document-list" class="document-list"></div>
+          </div>
+        </section>
+
+        <div id="chat" class="chat-box" aria-live="polite">
+          <article class="message message-bot intro-message">
+            <div class="message-avatar">AI</div>
+            <div class="message-bubble">
+              <p class="message-label">RAG Assistant</p>
+              <p>
+                Upload a document, ask a question, and inspect which chunks were retrieved to support the answer.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <form class="composer" id="composer">
+          <label class="composer-label" for="question">Your question</label>
+          <div class="composer-row">
+            <input
+              id="question"
+              name="question"
+              type="text"
+              placeholder="Ask something about your documents..."
+              autocomplete="off"
+            />
+            <button id="send-button" type="submit">
+              <span>Send</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.env
+.venv/
+venv/
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+server_stdout.log
+server_stderr.log
+faiss_index.index
+faiss_meta.json

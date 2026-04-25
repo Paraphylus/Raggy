@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.vscode
+server_stdout.log
+server_stderr.log
+faiss_index.index
+faiss_meta.json

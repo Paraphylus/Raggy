@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sentence-transformers
+faiss-cpu
+python-multipart
+requests
+pydantic
+tqdm
+python-dotenv
+gunicorn
+groq
