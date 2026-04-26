@@ -6,6 +6,8 @@ This project was built to make document search feel less like keyword hunting an
 
 ## Live Demo Flow
 
+Live site: https://raggy-production.up.railway.app
+
 1. Open the app in a browser.
 2. Upload a PDF or TXT document, or use the bundled demo document.
 3. Ask a question about the document.
