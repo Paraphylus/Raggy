@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-sentence-transformers
+fastembed
 faiss-cpu
 python-multipart
 requests
@@ -9,3 +9,4 @@ tqdm
 python-dotenv
 gunicorn
 groq
+pymupdf

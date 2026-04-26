@@ -17,7 +17,7 @@ This project was built to make document search feel less like keyword hunting an
 - Accepts PDF and TXT uploads
 - Extracts document text with PyMuPDF for PDFs
 - Splits content into overlapping chunks
-- Creates semantic embeddings with `sentence-transformers`
+- Creates semantic embeddings with `fastembed` (ONNX-based, lightweight. Previously used sentence-transformers which increased deployment space)
 - Stores and searches vectors with FAISS
 - Retrieves the top matching chunks for each query
 - Generates grounded answers through Groq
@@ -65,7 +65,7 @@ Note: the app rebuilds the FAISS index from files in `data/` when the server sta
 | --- | --- |
 | Backend API | FastAPI, Uvicorn |
 | Frontend | HTML, CSS, JavaScript |
-| Embeddings | Sentence Transformers |
+| Embeddings | FastEmbed |
 | Vector Search | FAISS |
 | PDF Parsing | PyMuPDF |
 | LLM Generation | Groq API |
@@ -96,7 +96,7 @@ Create a `.env` file:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
-EMBED_LOCAL_ONLY=false
+EMBED_MODEL=BAAI/bge-small-en-v1.5
 HOST=127.0.0.1
 PORT=8080
 TOP_K=5
@@ -130,48 +130,16 @@ docker compose up --build
 
 ## Deployment Notes
 
-For a recruiter-facing demo, deploy the Dockerized app to Railway, Render, Fly.io, or any VPS that supports containers.
-
 Required production environment variables:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
-EMBED_LOCAL_ONLY=false
+EMBED_MODEL=BAAI/bge-small-en-v1.5
 HOST=0.0.0.0
 PORT=8080
 TOP_K=5
 ```
 
-If uploads need to survive restarts, mount persistent storage to:
-
-```text
-/app/data
-```
-
-## Clean GitHub Upload
-
-Keep the repository focused on source code and lightweight demo assets. Do not commit virtual environments, secrets, generated indexes, or logs.
-
-Recommended `.gitignore` entries:
-
-```gitignore
-.env
-.venv/
-venv/
-.vscode/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.pytest_cache/
-.mypy_cache/
-server_stdout.log
-server_stderr.log
-faiss_index.index
-faiss_meta.json
-```
-
 ## Why This Project Matters
 
 This project demonstrates the core pieces of a practical RAG system: document ingestion, chunking strategy, vector indexing, semantic retrieval, prompt construction, answer generation, and a usable interface for non-technical users. It is small enough to deploy easily, but complete enough to show the full retrieval pipeline in action.
-

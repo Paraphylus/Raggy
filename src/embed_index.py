@@ -3,10 +3,11 @@ import os
 from pathlib import Path
 
 import faiss
-from sentence_transformers import SentenceTransformer
+import numpy as np
+from fastembed import TextEmbedding
 
 from src.preprocess import docs_to_chunks
-from src.retrieve import EMBED_LOCAL_ONLY, EMBED_MODEL, resolve_data_path
+from src.retrieve import EMBED_MODEL, resolve_data_path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -15,10 +16,10 @@ META_PATH = resolve_data_path(os.getenv("FAISS_META_PATH", ""), "faiss_meta.json
 
 
 def build_index(chunks, model_name=EMBED_MODEL, index_path=INDEX_PATH, meta_path=META_PATH):
-    model = SentenceTransformer(model_name, local_files_only=EMBED_LOCAL_ONLY)
+    model = TextEmbedding(model_name)
     texts = [chunk["text"] for chunk in chunks]
-    embeddings = model.encode(texts, show_progress_bar=True, convert_to_numpy=True, batch_size=32)
-    dim = embeddings.shape[1]
+    embeddings = np.asarray(list(model.embed(texts)), dtype=np.float32)
+    dim = int(embeddings.shape[1])
     index = faiss.IndexFlatIP(dim)
     faiss.normalize_L2(embeddings)
     index.add(embeddings)

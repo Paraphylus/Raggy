@@ -4,12 +4,11 @@ from pathlib import Path
 
 import faiss
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-mpnet-base-v2")
-EMBED_LOCAL_ONLY = os.getenv("EMBED_LOCAL_ONLY", "true").lower() in {"1", "true", "yes", "on"}
+EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
 
 
 def resolve_data_path(raw_path: str, default_name: str) -> Path:
@@ -38,7 +37,7 @@ class Retriever:
     def __init__(self, index_path: Path = INDEX_PATH, meta_path: Path = META_PATH, model_name: str = EMBED_MODEL):
         self.index_path = Path(index_path)
         self.meta_path = Path(meta_path)
-        self.model = SentenceTransformer(model_name, local_files_only=EMBED_LOCAL_ONLY)
+        self.model = TextEmbedding(model_name)
         self.index = None
         self.meta = []
         self._load()
@@ -56,12 +55,12 @@ class Retriever:
             self.meta = []
 
     def _build_empty_index(self):
-        sample_embedding = self.model.encode(["dimension probe"], convert_to_numpy=True)
-        dimension = sample_embedding.shape[1]
+        sample_embedding = self._encode(["dimension probe"])
+        dimension = int(sample_embedding.shape[1])
         return faiss.IndexFlatIP(dimension)
 
     def _encode(self, texts):
-        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        embeddings = list(self.model.embed(texts))
         embeddings = np.asarray(embeddings, dtype=np.float32)
         faiss.normalize_L2(embeddings)
         return embeddings
